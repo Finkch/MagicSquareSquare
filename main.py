@@ -1,3 +1,5 @@
+import math
+
 
 #   Fills the array, arr, with all squares smaller than max
 #   Used for a quick lookup rather than doing lots of square roots
@@ -9,26 +11,30 @@ def squares_array(arr, maximum):
         arr[i ** 2] = i
         i += 1
 
+#   Used for debugging
+#   Prints the current step, including the potential magic array and the array of its sums
+#       Will only print if the global variable should_print is True
 def print_step(arr, sums):
     if not should_print:
         return
 
-    for i in arr:
-        for j in i:
-            print(j, end=" ")
+    #   Prints the potential magic array
+    print(arr, end="\t")
 
-    print("\t", end="\t")
-
-    for i in sums:
-        print(i, end=" ")
-
-    print()
+    #   Prints the sums of the potential magic array
+    print(sums)
 
 
 #   Performs a sum over the magic array
 def sum_magic(magic_arr):
+    #   Gets the dimensions of the matrix
+    #       It is guaranteed to be an nxn matrix
     n = len(magic_arr)
 
+    # The total ways to sum a magic square
+    #   There are n contributions from the tuples
+    #   An additional n contributions from the columns
+    #   And two final contributions from the diagonals
     sums = [0] * (2 * n + 2)
 
     #   Row sums
@@ -41,13 +47,21 @@ def sum_magic(magic_arr):
         for j in range(n):
             sums[n + i] += magic_arr[i][j]
 
-    #   Diagonal
-    sums[-2] = magic_arr[0][0] + magic_arr[1][1] + magic_arr[2][2]
-    sums[-1] = magic_arr[2][0] + magic_arr[1][1] + magic_arr[0][2]
+    #   First diagonal
+    for i in range(n):
+        sums[-2] += magic_arr[i][i]
+
+    #   Second diagonal
+    for i in range(n):
+        sums[-1] += magic_arr[n - i - 1][i]
 
     return sums
 
 
+#   NEEDS TO BE UPDATED
+#   Given a 3x1 matrix (or a tuple of width 3), produces a permutation based upon an index
+#   Current implementation does so the lazy way
+#       The index is used as a lookup for the pre-computed permutations
 def produce_tuple(arr, i, case):
     if case == 0:
         return [arr[i][0], arr[i][1], arr[i][2]]
@@ -63,6 +77,8 @@ def produce_tuple(arr, i, case):
         return [arr[i][1], arr[i][2], arr[i][0]]
 
 
+#   Checks if all elements in an array are the same
+#       Used to check if all sums in a potential magic array are equal
 def all_equal(to_check):
     for i in to_check[1:]:
         if i != to_check[0]:
