@@ -105,20 +105,30 @@ def split(n):
 #       In short, the search space is 108 items
 #           That is if we only swap items around within one i
 def magic(magic_arr):
-    for i in range(6):
-        for j in range(6):
-            for k in range(6):
+
+    #   Calculates the number of ways to arrange one tuple
+    permutations = math.factorial(len(magic_arr))
+
+    #   Iterates over all permutations of the potential magic array
+    for i in range(permutations):
+        for j in range(permutations):
+            for k in range(permutations):
+
+                #   Given the potential magic array, produce a single permutations of the elements within each tuple
+                #       The order of the tuples are not swapped.
+                #       Only the order of elements within a tuple are swapped.
                 check_arr = [produce_tuple(magic_arr, 0, i),
                              produce_tuple(magic_arr, 1, j),
                              produce_tuple(magic_arr, 2, k)]
 
+                #   Produces an array of all the sums of the potential magic square
                 to_check = sum_magic(check_arr)
 
-
+                #   Debug print-out
                 print_step(check_arr, to_check)
 
-
-
+                #   Checks if all the sums are equal
+                #       If so, it is a valid magic square, and it is returned
                 if all_equal(to_check):
                     return check_arr
 
@@ -155,6 +165,7 @@ def main():
 
     the_magic_arr = magic(false_arr)
 
+    #   Prints out the valid magic square
     for l in the_magic_arr:
         print(l)
 
