@@ -1,6 +1,3 @@
-import math
-import numpy as np
-
 
 #   Fills the array, arr, with all squares smaller than max
 #   Used for a quick lookup rather than doing lots of square roots
@@ -12,24 +9,41 @@ def squares_array(arr, maximum):
         arr[i ** 2] = i
         i += 1
 
+def print_step(arr, sums):
+    if not should_print:
+        return
+
+    for i in arr:
+        for j in i:
+            print(j, end=" ")
+
+    print("\t", end="\t")
+
+    for i in sums:
+        print(i, end=" ")
+
+    print()
+
 
 #   Performs a sum over the magic array
 def sum_magic(magic_arr):
-    sums = [0] * 8
+    n = len(magic_arr)
+
+    sums = [0] * (2 * n + 2)
 
     #   Row sums
-    for i in range(3):
-        for j in range(3):
+    for i in range(n):
+        for j in range(n):
             sums[i] += magic_arr[j][i]
 
     #   Vertical sums
-    for i in range(3):
-        for j in range(3):
-            sums[3 + i] += magic_arr[i][j]
+    for i in range(n):
+        for j in range(n):
+            sums[n + i] += magic_arr[i][j]
 
     #   Diagonal
-    sums[6] = magic_arr[0][0] + magic_arr[1][1] + magic_arr[2][2]
-    sums[7] = magic_arr[2][0] + magic_arr[1][1] + magic_arr[0][2]
+    sums[-2] = magic_arr[0][0] + magic_arr[1][1] + magic_arr[2][2]
+    sums[-1] = magic_arr[2][0] + magic_arr[1][1] + magic_arr[0][2]
 
     return sums
 
@@ -44,24 +58,9 @@ def produce_tuple(arr, i, case):
     elif case == 3:
         return [arr[i][2], arr[i][1], arr[i][0]]
     elif case == 4:
-        return [arr[i][1], arr[i][0], arr[i][2]
-        else:
-        return [arr[i][1], arr[i][2], arr[i][0]]
-
-    """
-    if case == 0:
-        return [arr[0][i], arr[1][i], arr[2][i]]
-    elif case == 1:
-        return [arr[0][i], arr[2][i], arr[1][i]]
-    elif case == 2:
-        return [arr[2][i], arr[0][i], arr[1][i]]
-    elif case == 3:
-        return [arr[2][i], arr[1][i], arr[0][i]]
-    elif case == 4:
-        return [arr[1][i], arr[0][i], arr[2][i]]
+        return [arr[i][1], arr[i][0], arr[i][2]]
     elif case == 5:
-        return [arr[1][i], arr[2][i], arr[0][i]]
-    """
+        return [arr[i][1], arr[i][2], arr[i][0]]
 
 
 def all_equal(to_check):
@@ -93,15 +92,19 @@ def magic(magic_arr):
     for i in range(6):
         for j in range(6):
             for k in range(6):
-                check_arr = [produce_tuple(magic_arr, 0, i), produce_tuple(magic_arr, 1, j),
+                check_arr = [produce_tuple(magic_arr, 0, i),
+                             produce_tuple(magic_arr, 1, j),
                              produce_tuple(magic_arr, 2, k)]
 
                 to_check = sum_magic(check_arr)
 
-                print(to_check)
+
+                print_step(check_arr, to_check)
+
+
 
                 if all_equal(to_check):
-                    print("Good!", i, j, k)
+                    return check_arr
 
     return
 
@@ -114,13 +117,14 @@ def magic_dance(n):
 #   Describes some meta-variables and initiates the rest
 def main():
     # maximum = 1e9 # A reasonable max, just shy of half as big as sys.maxsize
+    maximum = 121
 
     #   Creates a very big array
-    # squares = [0] * int(maximum)
+    squares = [0] * int(maximum)
 
     #   Fills the very big array with lots and lots of square roots in appropriate places
     #   If the i-th entry is a square, it contains its square root (e.x.: arr[9] contains 3, arr[3] contains 0)
-    # squares_array(squares, maximum)
+    squares_array(squares, maximum)
 
     # for i in range(maximum):
     #    magic_dance(i)
@@ -133,9 +137,14 @@ def main():
                  [3, 5, 7],
                  [1, 6, 8]]
 
-    magic(false_arr)
+    the_magic_arr = magic(false_arr)
+
+    for l in the_magic_arr:
+        print(l)
 
     print("All done!")
 
+
+should_print = True
 
 main()
