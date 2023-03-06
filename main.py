@@ -57,14 +57,20 @@ def sum_magic(magic_arr):
 
     return sums
 
-
+#   Heap's algorithm is used to efficiently find all permutations of a list
+#       Swaps elements around until all permutations are obtained
 def heaps(a, size, j, state):
+
+    #   The return condition
+    #       Appends the found permutation to the output array
     if size == 1:
         state[j].append(a.copy())
 
     for i in range(size):
+        #   Recurses
         heaps(a, size - 1, j, state)
 
+        #   Swaps elements based on whether the step is even or odd
         if size % 2 == 1:
             a[0], a[size - 1] = a[size - 1], a[0]
         else:
@@ -109,10 +115,13 @@ def magic(magic_arr):
     #   Given the potential magic array, produce all permutations of the elements within each tuple
     #       The order of the tuples are not swapped.
     #       Only the order of elements within a tuple are swapped.
-    possibles = [[], [], []]
+    possibles = []
     for i in range(n):
+        possibles.append([])
         heaps(magic_arr[i], n, i, possibles)
 
+    if should_print:
+        print("All permutations:\n", possibles, "\n", sep="")
 
     #   Iterates over all permutations of the potential magic array
     for i in range(permutations):
@@ -176,6 +185,6 @@ def main():
     print("All done!")
 
 
-should_print = False
+should_print = True
 
 main()
