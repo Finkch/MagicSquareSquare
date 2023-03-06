@@ -58,23 +58,17 @@ def sum_magic(magic_arr):
     return sums
 
 
-#   NEEDS TO BE UPDATED
-#   Given a 3x1 matrix (or a tuple of width 3), produces a permutation based upon an index
-#   Current implementation does so the lazy way
-#       The index is used as a lookup for the pre-computed permutations
-def produce_tuple(arr, i, case):
-    if case == 0:
-        return [arr[i][0], arr[i][1], arr[i][2]]
-    elif case == 1:
-        return [arr[i][0], arr[i][2], arr[i][1]]
-    elif case == 2:
-        return [arr[i][2], arr[i][0], arr[i][1]]
-    elif case == 3:
-        return [arr[i][2], arr[i][1], arr[i][0]]
-    elif case == 4:
-        return [arr[i][1], arr[i][0], arr[i][2]]
-    elif case == 5:
-        return [arr[i][1], arr[i][2], arr[i][0]]
+def heaps(a, size, j, state):
+    if size == 1:
+        state[j].append(a.copy())
+
+    for i in range(size):
+        heaps(a, size - 1, j, state)
+
+        if size % 2 == 1:
+            a[0], a[size - 1] = a[size - 1], a[0]
+        else:
+            a[i], a[size - 1] = a[size - 1], a[i]
 
 
 #   Checks if all elements in an array are the same
@@ -106,20 +100,27 @@ def split(n):
 #           That is if we only swap items around within one i
 def magic(magic_arr):
 
+    #   The dimension of the matrix
+    n = len(magic_arr)
+
     #   Calculates the number of ways to arrange one tuple
-    permutations = math.factorial(len(magic_arr))
+    permutations = math.factorial(n)
+
+    #   Given the potential magic array, produce all permutations of the elements within each tuple
+    #       The order of the tuples are not swapped.
+    #       Only the order of elements within a tuple are swapped.
+    possibles = [[], [], []]
+    for i in range(n):
+        heaps(magic_arr[i], n, i, possibles)
+
 
     #   Iterates over all permutations of the potential magic array
     for i in range(permutations):
         for j in range(permutations):
             for k in range(permutations):
 
-                #   Given the potential magic array, produce a single permutations of the elements within each tuple
-                #       The order of the tuples are not swapped.
-                #       Only the order of elements within a tuple are swapped.
-                check_arr = [produce_tuple(magic_arr, 0, i),
-                             produce_tuple(magic_arr, 1, j),
-                             produce_tuple(magic_arr, 2, k)]
+                #   Obtains a unique permutation of each tuple
+                check_arr = [possibles[0][i], possibles[1][j], possibles[2][k]]
 
                 #   Produces an array of all the sums of the potential magic square
                 to_check = sum_magic(check_arr)
@@ -148,6 +149,9 @@ def main():
     #   Creates a very big array
     squares = [0] * int(maximum)
 
+    #   Describes the dimensions of the magic square
+    dim = 3
+
     #   Fills the very big array with lots and lots of square roots in appropriate places
     #   If the i-th entry is a square, it contains its square root (e.x.: arr[9] contains 3, arr[3] contains 0)
     squares_array(squares, maximum)
@@ -172,6 +176,6 @@ def main():
     print("All done!")
 
 
-should_print = True
+should_print = False
 
 main()
