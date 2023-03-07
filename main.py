@@ -1,6 +1,5 @@
 import math
 
-
 #   Fills the array, arr, with all squares smaller than max
 #   Used for a quick lookup rather than doing lots of square roots
 #       If the i-th entry is a square, it contains its square root (e.x.: arr[9] contains 3)
@@ -120,8 +119,13 @@ def magic(magic_arr):
         possibles.append([])
         heaps(magic_arr[i], n, i, possibles)
 
+    #   Print out all permutations
     if should_print:
-        print("All permutations:\n", possibles, "\n", sep="")
+        print("All permutations:")
+        for l in possibles:
+            print(l)
+        print()
+
 
     #   Iterates over all permutations of the potential magic array
     for i in range(permutations):
@@ -178,11 +182,18 @@ def main():
 
     the_magic_arr = magic(false_arr)
 
-    #   Prints out the valid magic square
-    for l in the_magic_arr:
-        print(l)
+    #   Prints out the valid magic square, if is exists
+    if the_magic_arr:
+        sum = 0
+        for l in the_magic_arr[0]:
+            sum += l
 
-    print("All done!")
+        print("\nThe magic array (S = ", sum, "):", sep="")
+        for l in the_magic_arr:
+            print(l)
+    else:
+        print("No magic array found...")
+    print("\nAll done!")
 
 
 should_print = True
