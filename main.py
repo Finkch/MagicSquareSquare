@@ -2,8 +2,8 @@ import math
 
 #   Fills the array, arr, with all squares smaller than max
 #   Used for a quick lookup rather than doing lots of square roots
-#       If the i-th entry is a square, it contains its square root (e.x.: arr[9] contains 3)
-#       Otherwise it contains 0
+#       If i is a square, then the item at the index i is the square of i
+#       Must use a try-catch to check, in case the item at index i is not a square
 def squares_array(arr, maximum):
     i = 0
     while i ** 2 < maximum:
@@ -13,12 +13,12 @@ def squares_array(arr, maximum):
 #   Used for debugging
 #   Prints the current step, including the potential magic array and the array of its sums
 #       Will only print if the global variable should_print is True
-def print_step(arr, sums):
+def print_step(arr, sums, iter):
     if not should_print:
         return
 
     #   Prints the potential magic array
-    print(arr, end="\t")
+    print(iter, ": ", arr, sep="", end="\t")
 
     #   Prints the sums of the potential magic array
     print(sums)
@@ -85,19 +85,91 @@ def all_equal(to_check):
     return True
 
 
-#   For a number n, splits it into 9 components
+#   For a number n, splits it into m^2 components
+#   For the 3x3 magic square squared,
 #       At least 7, 8, or 9 must be squares of integers
 #       All must be distinct
-#   The largest size of any component is reasonably n / 3
-#       For completeness's sake, we'll consider up to n / 2
-def split(n):
+def split(n, m):
     return
 
 
+#   This code DOES NOT WORK
+#   I'm leaving it here because I want to come back to it
+#       It feels like, if I can get it to work, it would be a particularly elegant solution
+#   Given the array of possibles, gives all unique permutations
+#       Does so through a recursive method
+def get_permutations_recursive(check, possibles, i, j):
+
+    if len(possibles) == 0:
+        check[i][j] = possibles[0][i]
+        return
+
+    if len(possibles[0]) == 0:
+        get_permutations_recursive(check, possibles[1:], 0, j + 1)
+
+    print(i, j, "\t\tDims: ", len(possibles), len(possibles[0]), "\t\t", possibles[0][i])
+
+    get_permutations_recursive(check, [*check[:i], check[i][1:], *check[i+1:]] , i + 1, j)
+
+#   Gets the permutations of tuples through iteration over n!^n items,
+#   which is effectively iterating over n for loops of length n! each,
+#   and using an equation using a modulus to construct the unique permutation
+def get_permutations_mod(check, possibles):
+    #   Gets the dimensions of each array
+    n = len(possibles)
+    n_fact = len(possibles[0])
+    all_permutations = n_fact ** n
+
+    #   Iterates over all permutations of the n tuples
+    for i in range(all_permutations):
+
+        #   Creates a new array to check
+        check.append([])
+
+        #   Fills the new array with one of the necessary tuples
+        #   to create a unique entry
+        for j in range(len(possibles)):
+            #   Determines which tuples to grab
+            mod = int(i / (n_fact ** (n - j - 1))) % n_fact
+            check[-1].append(possibles[j][mod]) #   Appends the
+
+
+#   Iterates over all combinations of a 3x3 array
+#       Does so though a harc-coded 3 deep for loop
+def get_permutations_3(check, possibles):
+    #   Gets n!
+    #       Which is the length of each tuple in the possibles array
+    permutations = len(possibles[0])
+
+    #   Iterates over all combinations
+    for i in range(permutations):
+        for j in range(permutations):
+            for k in range(permutations):
+                #   Obtains a unique permutation of each tuple
+                check.append([possibles[0][i], possibles[1][j], possibles[2][k]])
+
+
+#   Iterates over all combinations of a 4x4 array
+#       Does so though a harc-coded 4 deep for loop
+def get_permutations_4(check, possibles):
+    #   Gets n!
+    #       Which is the length of each tuple in the possibles array
+    permutations = len(possibles[0])
+
+    #   Iterates over all combinations
+    for i in range(permutations):
+        for j in range(permutations):
+            for k in range(permutations):
+                for l in range(permutations):
+                    #   Obtains a unique permutation of each tuple
+                    check.append([possibles[0][i], possibles[1][j], possibles[2][k], possibles[3][l]])
+
+
 #   Given the results of split, tries to place the items into a magic square squared
-#       Component 4 must be used four times
-#       Components 0, 2, 6, 8 must all be used three times
-#       Components 1, 3, 5, 7 must all be used three times
+#       On a 3x3 matrix...
+#           Component 4 must be used four times
+#           Components 0, 2, 6, 8 must all be used three times
+#           Components 1, 3, 5, 7 must all be used three times
 #   There are technically 9! ways of arranging the items, aka 362 880 ways
 #       However, based on the previous restriction of A_i + B_i + C_i = N, the search space is (3!)^3
 #       Then due to the symmetry around only the first i (the choice of first is arbitrary), it's ((3!)^3)/2
@@ -121,30 +193,29 @@ def magic(magic_arr):
 
     #   Print out all permutations
     if should_print:
-        print("All permutations:")
+        print("All permutations of each item within every tuple:")
         for l in possibles:
             print(l)
         print()
 
 
-    #   Iterates over all permutations of the potential magic array
-    for i in range(permutations):
-        for j in range(permutations):
-            for k in range(permutations):
+    #   Creates the potential magic arrays
+    check_arr = []
+    get_permutations_mod(check_arr, possibles)
 
-                #   Obtains a unique permutation of each tuple
-                check_arr = [possibles[0][i], possibles[1][j], possibles[2][k]]
+    index = 0   #   The index of the iteration, for printing purposes
+    for i in check_arr:
+        #   Produces an array of all the sums of the potential magic square
+        to_check = sum_magic(i)
 
-                #   Produces an array of all the sums of the potential magic square
-                to_check = sum_magic(check_arr)
+        #   Debug print-out
+        print_step(i, to_check, index)
+        index += 1
 
-                #   Debug print-out
-                print_step(check_arr, to_check)
-
-                #   Checks if all the sums are equal
-                #       If so, it is a valid magic square, and it is returned
-                if all_equal(to_check):
-                    return check_arr
+        #   Checks if all the sums are equal
+        #       If so, it is a valid magic square, and it is returned
+        if all_equal(to_check):
+            return i
 
     return
 
@@ -160,14 +231,14 @@ def main():
     maximum = 121
 
     #   Creates a very big array
-    squares = [0] * int(maximum)
+    squares = []
 
     #   Describes the dimensions of the magic square
     dim = 3
 
     #   Fills the very big array with lots and lots of square roots in appropriate places
     #   If the i-th entry is a square, it contains its square root (e.x.: arr[9] contains 3, arr[3] contains 0)
-    squares_array(squares, maximum)
+    #squares_array(squares, maximum)
 
     # for i in range(maximum):
     #    magic_dance(i)
