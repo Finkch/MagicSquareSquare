@@ -10,6 +10,7 @@ def squares_array(arr, maximum):
         arr[i ** 2] = i
         i += 1
 
+
 #   Used for debugging
 #   Prints the current step, including the potential magic array and the array of its sums
 #       Will only print if the global variable should_print is True
@@ -85,12 +86,48 @@ def all_equal(to_check):
     return True
 
 
-#   For a number n, splits it into m^2 components
+#   For a number s, splits it into m^2 components
 #   For the 3x3 magic square squared,
 #       At least 7, 8, or 9 must be squares of integers
 #       All must be distinct
-def split(n, m):
+def split(splits, s, m):
+
+
     return
+
+def split_3(splits, s, squares):
+
+    for i in range(s - 3, int(s / 3) + 1, -1):
+        for j in range(s - i - 1, 2, -1):
+            k = s - i - j
+            to_check = [i, j, k]
+
+            count_of_squares = check_split(to_check, squares)
+
+            if count_of_squares < 2 or i <= j or j <= k:
+                continue
+            else:
+                to_check.append(count_of_squares)
+
+            splits.append(to_check)
+
+
+def check_split(to_check, squares):
+    return count_squares(to_check, squares)
+
+
+def count_squares(to_check, squares):
+    sqrs = 0
+    for i in to_check:
+        try:
+            if squares[i] != 0:
+                sqrs += 1
+        except:
+            pass
+
+    return sqrs
+
+
 
 
 #   This code DOES NOT WORK
@@ -131,7 +168,7 @@ def get_permutations_mod(check, possibles):
         for j in range(len(possibles)):
             #   Determines which tuples to grab
             mod = int(i / (n_fact ** (n - j - 1))) % n_fact
-            check[-1].append(possibles[j][mod]) #   Appends the
+            check[-1].append(possibles[j][mod]) #   Appends the tuples to the appropriate potential
 
 
 #   Iterates over all combinations of a 3x3 array
@@ -152,8 +189,7 @@ def get_permutations_3(check, possibles):
 #   Iterates over all combinations of a 4x4 array
 #       Does so though a harc-coded 4 deep for loop
 def get_permutations_4(check, possibles):
-    #   Gets n!
-    #       Which is the length of each tuple in the possibles array
+    #   Gets n!, the length of each tuple in the possibles array
     permutations = len(possibles[0])
 
     #   Iterates over all combinations
@@ -231,14 +267,14 @@ def main():
     maximum = 121
 
     #   Creates a very big array
-    squares = []
+    squares = {}
 
     #   Describes the dimensions of the magic square
     dim = 3
 
     #   Fills the very big array with lots and lots of square roots in appropriate places
     #   If the i-th entry is a square, it contains its square root (e.x.: arr[9] contains 3, arr[3] contains 0)
-    #squares_array(squares, maximum)
+    squares_array(squares, maximum)
 
     # for i in range(maximum):
     #    magic_dance(i)
@@ -255,16 +291,29 @@ def main():
 
     #   Prints out the valid magic square, if is exists
     if the_magic_arr:
-        sum = 0
+        S = 0
         for l in the_magic_arr[0]:
-            sum += l
+            S += l
 
-        print("\nThe magic array (S = ", sum, "):", sep="")
+        print("\nThe magic array (S = ", S, "):", sep="")
         for l in the_magic_arr:
             print(l)
     else:
         print("No magic array found...")
     print("\nAll done!")
+
+
+    splits = []
+    split_3(splits, 100, squares)
+
+
+    for i in splits:
+        print(i)
+
+    print(len(splits))
+
+    print("\n\n", squares)
+
 
 
 should_print = True
