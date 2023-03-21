@@ -99,7 +99,7 @@ def split_3(s, squares, min_squares):
             splits.append([i, j, k, c])
 
     #   Prints the amount of 'bad' tuples created
-    print(bads)
+    #print(bads)
 
     #   Returns all the ways to split s into 3 components
     return splits
@@ -108,13 +108,15 @@ def split_3(s, squares, min_squares):
 #   Gets the ball rolling
 def main():
     #   The maximum number to search up to
-    maximum = 100
+    maximum = 1000
 
-    #   The current sum to split up and check if it is a magic square
-    s = maximum
+    minimum = 10
+
+    #   An array of all splits that are potential magic squares
+    candidates = []
 
     #   The minimum number of integer squares required per tuple
-    min_squares = 2
+    min_squares = 3
 
     #   An array to quickly lookup square roots
     squares = create_squares(maximum)
@@ -126,16 +128,24 @@ def main():
     #       With integer squares 3, len(splits) = 0
 
     #   Splits s into 3 components
-    splits = split_3(s, squares, min_squares)
+    for s in range(minimum, maximum):
+        splits = split_3(s, squares, min_squares)
+
+        if s % 10 == 0:
+            print(s, end=" ")
+
+        if len(splits) >= 3:
+            splits.insert(0, [s, len(splits)])
+            candidates.append(splits)
 
     print(squares)
 
     print("\n\n")
 
-    for i in splits:
+    for i in candidates:
         print(i)
 
-    print("\nIs valid:", is_valid_splits(s, splits), "\nLength:", len(splits))
+    print("\n\nNumber of candidates:", len(candidates))
 
 
 
