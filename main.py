@@ -57,6 +57,19 @@ def count_squares(arr, squares):
     return c_squares
 
 
+#   Checks if the array can construct a magic square with at least 7 integer squares
+def has_enough_squares(splits):
+    #   Creates an array that tracks the occurrences of the counts of squares within each tuples
+    counts = [0] * 4
+
+    #   Checks the count of integer squares in each tuple
+    for i in splits:
+        counts[i[-1]] += 1
+
+    #   Returns the counts
+    return counts
+
+
 #   Splits a sum, s, into d = 3 components
 #       Returns an array of all such sums
 #       As a note, s[i][0] > s[i][1] > s[i][2]
@@ -108,15 +121,17 @@ def split_3(s, squares, min_squares):
 #   Gets the ball rolling
 def main():
     #   The maximum number to search up to
-    maximum = 1000
+    maximum = 22
 
-    minimum = 10
+    minimum = 21
 
     #   An array of all splits that are potential magic squares
     candidates = []
 
     #   The minimum number of integer squares required per tuple
-    min_squares = 3
+    min_squares = 1
+
+    print("Checking from ", minimum, " to ", maximum, ", requiring at least ", min_squares, " integer square!\n", sep="")
 
     #   An array to quickly lookup square roots
     squares = create_squares(maximum)
@@ -131,21 +146,37 @@ def main():
     for s in range(minimum, maximum):
         splits = split_3(s, squares, min_squares)
 
+        #   Prints out a progress update
         if s % 10 == 0:
             print(s, end=" ")
 
-        if len(splits) >= 3:
+        #   Creates a histogram of integer squares in the tuples
+        counts = has_enough_squares(splits)
+
+        #   Checks if there are a sufficient amount of integer squares
+        if counts[2] >= 2 and counts[3] >= 1:
+
+            #   If there is only one row with three squares, then the rest must not have only 1
+            if counts[3] == 1:
+                splits = [i for i in splits if i[-1] != 1]  #   Removes tuples with 1 integer square
+                counts[1] = 0   #   Sets the count of tuples with 1 integer square to 0
+
+
+            #   Prefaces the tuple with the sum and the ways to split that sum
             splits.insert(0, [s, len(splits)])
+
+            #   Appends the split to the list of candidates
             candidates.append(splits)
 
-    print(squares)
+    #   Prints out the list of integer squares computed
+    print("\nSquares:", squares, "\n")
 
-    print("\n\n")
-
+    #   Lists out all candidates
     for i in candidates:
         print(i)
 
-    print("\n\nNumber of candidates:", len(candidates))
+    #   Prints the count of candidates
+    print("\nNumber of candidates:", len(candidates))
 
 
 
