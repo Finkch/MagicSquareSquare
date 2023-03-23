@@ -32,6 +32,7 @@ def is_valid_splits(s, splits):
             return False
     return True
 
+
 #   Creates a dictionary from 1 to maximum
 #       The keys are an integer square
 #       The values are the integer square root of the key
@@ -68,6 +69,60 @@ def has_enough_squares(splits):
 
     #   Returns the counts
     return counts
+
+"""
+def sort_on_first(element):
+    return element[0]
+
+#   Counts the occurrences of each value in each tuple
+#       This is to throw out candidates and tuples that won't contribute
+#   Oh my god, on a test value of 62, this removes a whopping 4 tuples out of 121.
+#   3% for _this_ much work!
+#       AAAAAAAHHH
+def count_occurrences(splits, s, threshold):
+
+    #   Creates an array of tuples
+    #       Each tuple has two elements:
+    #           The first is the count of occurrences
+    #           The second is the index (so index is preserved through sorting on occurrences)
+    occ = [[0, i] for i in range(0, s - 1)]
+
+    #   Counts the occurrences of a number in splits
+    for i in splits:
+        for j in i[:-1]:
+            occ[j][0] += 1
+
+    #   Removes items that only occur once (aren't candidates for a magic array)
+    occ = [i for i in occ if i[0] >= threshold]
+
+    #   Sort them
+    #       For good measure, I suppose
+    occ.sort(key=sort_on_first, reverse=True)
+
+    #   Creates a dictionary for quicker lookups
+    occ_out = {}
+    for i in occ:
+        occ_out[i[1]] = i[0]
+
+    #   Removes ineligible tuples from splits
+    #t = [i for i in splits if (j for j in i) if j not in occ_out]
+    #t = [i for i in splits if (j for j in i) not in occ_out.keys()]
+    t = []  #   If it ain't broke, don't fix it...
+    for i in splits:
+        good = True
+        for j in i:
+            if j not in occ_out.keys():
+                good = False
+                continue
+        if good:
+            t.append(i)
+
+    print(occ_out)
+    print(occ_out.keys())
+
+    #   Returns
+    return t
+"""
 
 
 #   Splits a sum, s, into d = 3 components
@@ -121,15 +176,17 @@ def split_3(s, squares, min_squares):
 #   Gets the ball rolling
 def main():
     #   The maximum number to search up to
-    maximum = 22
+    maximum = 63
 
-    minimum = 21
+    minimum = 62
 
     #   An array of all splits that are potential magic squares
     candidates = []
 
     #   The minimum number of integer squares required per tuple
     min_squares = 1
+
+    occurrence_threshold = 7
 
     print("Checking from ", minimum, " to ", maximum, ", requiring at least ", min_squares, " integer square!\n", sep="")
 
@@ -154,13 +211,15 @@ def main():
         counts = has_enough_squares(splits)
 
         #   Checks if there are a sufficient amount of integer squares
-        if counts[2] >= 2 and counts[3] >= 1:
+        if counts[2] >= 2 and counts[3] >= 2:
 
-            #   If there is only one row with three squares, then the rest must not have only 1
-            if counts[3] == 1:
-                splits = [i for i in splits if i[-1] != 1]  #   Removes tuples with 1 integer square
-                counts[1] = 0   #   Sets the count of tuples with 1 integer square to 0
-
+            """ #   Removes tuples that don't exclusively contain
+                #   values that occur a sufficient number of times
+                #   to potentially create a magic square
+            t = count_occurrences(splits, s, occurrence_threshold)
+            t.insert(0, [s, len(t)])
+            print(t)
+            """
 
             #   Prefaces the tuple with the sum and the ways to split that sum
             splits.insert(0, [s, len(splits)])
