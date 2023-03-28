@@ -1,6 +1,5 @@
 #   Various helpful methods
 
-
 #   Checks if a split is valid. In other words, confirms these conditions:
 #       a > b > c
 #       a, b, c > 0
@@ -29,9 +28,10 @@ def create_squares(maximum):
     return  squares
 
 #   Checks if the array can construct a magic square with at least 7 integer squares
-def has_enough_squares(splits):
+def has_enough_squares(splits, d):
     #   Creates an array that tracks the occurrences of the counts of squares within each tuples
-    counts = [0] * 4
+    counts = [0] * (d + 1)
+
 
     #   Checks the count of integer squares in each tuple
     for i in splits:
@@ -47,6 +47,7 @@ def sort_on_first(element):
 #   Counts the occurrences of each value in each tuple
 #       This is to throw out candidates and tuples that won't contribute
 #   Oh my god, on a test value of 62, this removes a whopping 4 tuples out of 121.
+#       This 4 remains constants as s grows!
 #   3% for _this_ much work!
 #       AAAAAAAHHH
 def count_occurrences(splits, s, threshold):
@@ -89,4 +90,35 @@ def count_occurrences(splits, s, threshold):
 
     #   Returns
     return t
+
+
+#   Removes items from split which have an insufficient amount of root sums
+#   to form an integer root magic square (thus cannot be bi-magic)
+#       The structure of splits is...
+#          [..., [[A_i, B_i, ..., D_i, sq_i], [a_i, b_i, ..., d_i, s_i]], ...]
+#       ...so the root sums are located in splits[i][1][d] or more simply splits[i][-1][-1]
+def count_root_sums(splits, s, d):
+
+    #   Creates a dictionary counting the occurrences of each item
+    occ = {}
+
+    #   Fills the dictionary by counting items
+    for i in splits:
+        z = i[-1][-1]
+        if z not in occ.keys():
+            occ[z] = 0
+        occ[z] += 1
+
+
+    #   Removes items that only occur once (aren't candidates for a magic array)
+    #       To be a candidate, the sum must appear once per row, once per column, and once per diagonal
+    #           Which is 2 * d + 2 times
+    occ = {i:occ[i] for i in occ.keys() if occ[i] >= (2 * d + 2)}
+    #occ = {i:occ[i] for i in occ.keys() if occ[i] >= 5} #   For testing
+
+    #   Removes the tuples without sufficient occurrences of the root sums
+    #       I.e. it removes items whose root sum is not a key in occ
+    splits = [i for i in splits if i[-1][-1] in occ.keys()]
+
+    return splits
 
