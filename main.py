@@ -18,6 +18,7 @@
 import magic_utility
 import splitting    #   Methods of splitting s into d components
 import magic_utility as mu  #   Various handy-dandy functions
+import time
 
 
 #   Checks if the candidate is a magic square
@@ -37,7 +38,7 @@ def magic_dance(s, candidates, squares, min_squares, occurrence_threshold, split
         print(s, end=" ")
 
     #   Creates a histogram of integer squares in the tuples
-    counts = mu.has_enough_squares(splits, d)
+    #counts = mu.has_enough_squares(splits, d)
 
 
     #   Removes tuples that don't exclusively contain values that
@@ -64,11 +65,11 @@ def magic_dance(s, candidates, squares, min_squares, occurrence_threshold, split
     splits = [[splits[i], root_sums[i]] for i in range(len(splits))]
 
     #   Checks if there is a sufficient amount (2 * d + 2) of root sums with the same sum
-    #splits = magic_utility.count_root_sums(splits, s, d)
+    splits = magic_utility.count_root_sums(splits, s, d)
 
     #   If this has insufficient number of tuples
-    #if len(splits) <= (2 * d + 2):
-    #    return
+    if len(splits) <= (2 * d + 2):
+        return
 
     #   Prefaces the tuple with the sum and the ways to split that sum
     splits.insert(0, [s, len(splits)])
@@ -107,20 +108,19 @@ def main():
     occurrence_threshold = 1
 
     #   Prints the startup summary
-    print("Checking from ", minimum, " to ", maximum, ", requiring at least ", min_squares, " integer square!", sep="")
+    print("Checking from ", minimum, " to ", maximum, " for d = ", d, ", requiring at least ", min_squares, " integer square!", sep="")
 
     #   An array to quickly lookup square roots
     squares = mu.create_squares(maximum)
 
 
     #   The way we'll be splitting s into its d components
-    split_fxn = None
-    if d == 3:
-        split_fxn = splitting.split_3
-    elif d == 5:
-        #split_fxn = splitting.split_5
-        split_fxn = splitting.split_recursive  #   This is faster!
+    split_fxn = splitting.split_recursive
+    #split_fxn = splitting.split_3
+    #split_fxn = splitting.split_5
 
+    #   Starts the timer:
+    timer_start = time.time()
 
     #   With s = 100...
     #       Without integer squares, len(splits) = 784
@@ -133,6 +133,9 @@ def main():
     for s in range(minimum, maximum):
         magic_dance(s, candidates, squares, min_squares, occurrence_threshold, split_fxn, d)
 
+    #   Ends the timer
+    timer_end = time.time()
+
     #   Prints out the list of integer squares computed
     print("\nSquares:", squares, "\n")
 
@@ -141,7 +144,7 @@ def main():
         print(i)
 
     #   Prints the count of candidates
-    print("\nNumber of candidates:", len(candidates))
+    print("\nNumber of candidates:", len(candidates), "\nTime elapsed:", round(timer_end - timer_start, 3), " s")
 
 
 main()
