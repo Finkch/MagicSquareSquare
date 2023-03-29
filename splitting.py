@@ -117,7 +117,61 @@ def split_5(s, d, squares, min_squares):
     return splits
 
 
+#   A split function for the d = 5 case
+#   This iterates only over values that are squares, skipping large swathes of bad values
+#   There is the condition that 'min_squares = d'; each item is an integer square
+def split_5_squares(s, d, squares, min_squares):
+    #   This array will be filled with all valid splits of s into d components
+    splits = []
+
+    #   Converts the squares dictionary to an array
+    #   This is so we can use indexing rather than keys
+    sqa = [i for i in squares.keys() if i <= s]
+
+    for i in range(4, len(sqa)):
+
+        for j in range(3, len(sqa[:i])):
+
+            #   If this condition is met, then all greater j's are bad values
+            if sqa[i] + sqa[j] > s:
+                break
+
+            for k in range(2, len(sqa[:j])):
+
+                #   If this condition is met, then all greater k's are bad values
+                if sqa[i] + sqa[j] + sqa[k] > s:
+                    break
+
+                for l in range(1, len(sqa[:k])):
+
+                    #   If this condition is met, then all greater l's are bad values
+                    if sqa[i] + sqa[j] + sqa[k] + sqa[l] > s:
+                        break
+
+                    #   There are no degrees of freedom left for m
+                    m = s - sqa[i] - sqa[j] - sqa[k] - sqa[l]
+
+                    #   Check if m is a valid
+                    if m >= sqa[l] or m not in squares:
+                        continue
+
+                    #   Creates the split
+                    split = [sqa[i], sqa[j], sqa[k], sqa[l], m]
+
+                    print(split, sum(split))
+
+                    split.append(d)    # Appends the length to this tuple
+                    splits.append(split)    #   Adds the split to the list of good splits
+
+    #   Returns all valid splits
+    return  splits
+
+
 #   Recursively splits s into d components
+#   NOTE: there is a hard limit due to Python recursion
+#       s - d < 1000
+#       For large numbers, an iterative approach is the only options
+#       While the recursion limit can be changed, it's a pain in the butt
 def split_recursive(s, d, squares, min_squares):
     #   Creates an array that will be populated with various ways to split s
     splits = []

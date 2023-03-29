@@ -30,7 +30,10 @@ def is_magic_square(s, root_splits, squares):
     return
 
 
-#   Checks if s can create a magic square
+#   Checks to see in a magic constant can create a magic square
+#       First creates all ways to split s into d components (following the conditions)
+#       Then processes those 'splits' to cut down search space
+#       Finally checks to see if that split can form a magic square
 def magic_dance(s, d, squares, candidates, min_squares, split_fxn, magic_fxn, params):
 
     #   Generates the ways to split s into d sums
@@ -76,8 +79,8 @@ def main():
     min_squares = d
 
     #   The bounds of the search
-    maximum = 900
-    minimum = 846
+    maximum = 655
+    minimum = 654
 
     #   An array of all splits that are potential magic squares
     candidates = []
@@ -98,9 +101,10 @@ def main():
     #magic_fxn = magic_dances.square_magic_dance
 
     #   The way we'll be splitting s into its d components
-    split_fxn = splitting.split_recursive
+    #split_fxn = splitting.split_recursive
     #split_fxn = splitting.split_3
     #split_fxn = splitting.split_5
+    split_fxn = splitting.split_5_squares   #   Faster than recursion!
 
     #   Starts the timer:
     timer_start = time.time()
