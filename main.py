@@ -15,7 +15,7 @@
 #           At just about each step, there are checks to discard invalid items.
 #           At just about each step, there are constraints to trim the search space.
 #           At the beginning, an array is creating to allow quick searches whether an item is a integer square.
-import magic_utility
+
 import splitting    #   Methods of splitting s into d components
 import magic_utility as mu  #   Various handy-dandy functions
 import time
@@ -23,7 +23,10 @@ import time
 
 #   Checks if the candidate is a magic square
 #   TODO: this
-#def is_magic_square(s, candidate, splits, squares):
+def is_magic_square(s, root_splits, squares):
+
+
+    return
 
 
 #   Checks if s can create a magic square
@@ -37,19 +40,19 @@ def magic_dance(s, candidates, squares, min_squares, occurrence_threshold, split
     if s % 10 == 0:
         print(s, end=" ")
 
+    """
     #   Creates a histogram of integer squares in the tuples
-    #counts = mu.has_enough_squares(splits, d)
-
+    counts = mu.has_enough_squares(splits, d)
 
     #   Removes tuples that don't exclusively contain values that
     #   occur a sufficient number of times to potentially create a
-    #   magic square. However, it's just too inefficient, so we skip
-    #   it most of the time
-    """
+    #   magic square. However, it's just too inefficient, so we skip it.
+
     if occurrence_threshold > 1:
         #   Trims unnecessary tuples
         splits = mu.count_occurrences(splits, s, occurrence_threshold)
     """
+
 
     #   Calculates the integer root sums of each tuple
     root_sums = []
@@ -60,22 +63,30 @@ def magic_dance(s, candidates, squares, min_squares, occurrence_threshold, split
 
     #   Couples each split with its root equivalent
     #   The shape of the data is:
-    #       [[S, |S|], ..., [[A_i, B_i, ..., D_i, sq_i], [a_i, b_i, ..., d_i, s_i]], ...]
+    #       [..., [[A_i, B_i, ..., D_i, sq_i], [a_i, b_i, ..., d_i, s_i]], ...]
     #   where capitals refer to the squared numbers and lowercase refers to integer roots
     splits = [[splits[i], root_sums[i]] for i in range(len(splits))]
 
     #   Checks if there is a sufficient amount (2 * d + 2) of root sums with the same sum
-    splits = magic_utility.count_root_sums(splits, s, d)
+    splits = mu.count_root_sums(splits, s, d)
 
     #   If this has insufficient number of tuples
     if len(splits) <= (2 * d + 2):
         return
 
+    #   Has the same shape as candidates, so a series of tuples with the shape of splits
+    #   Tuples of...
+    #       [[S, | S |], ..., [[A_i, B_i, ..., D_i, sq_i], [a_i, b_i, ..., d_i, s_i]], ...]
+    root_splits = mu.decouple_over_root_sum(splits)
+
     #   Prefaces the tuple with the sum and the ways to split that sum
+    #   The shape of the data is now...
+    #       [[S, | S |], ..., [[A_i, B_i, ..., D_i, sq_i], [a_i, b_i, ..., d_i, s_i]], ...]
     splits.insert(0, [s, len(splits)])
 
 
     #   Appends the split to the list of candidates
+    #       Mostly for a post-search printout
     candidates.append(splits)
 
 
@@ -97,14 +108,15 @@ def main():
     min_squares = d
 
     #   The bounds of the search
-    maximum = 655
-    minimum = 654
+    maximum = 847
+    minimum = 846
 
     #   An array of all splits that are potential magic squares
     candidates = []
 
     #   The minimum occurrences of a number in a tuple for a valid tuple
     #       The default is 1, which means that nothing happens
+    #       The relevant section of code is commented out, so this doubly does nothing
     occurrence_threshold = 1
 
     #   Prints the startup summary
@@ -112,7 +124,6 @@ def main():
 
     #   An array to quickly lookup square roots
     squares = mu.create_squares(maximum)
-
 
     #   The way we'll be splitting s into its d components
     split_fxn = splitting.split_recursive

@@ -116,6 +116,7 @@ def split_5(s, squares, min_squares, d):
 
     return splits
 
+
 #   Recursively splits s into d components
 def split_recursive(s, squares, min_squares, d):
     #   Creates an array that will be populated with various ways to split s
