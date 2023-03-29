@@ -28,7 +28,7 @@ def count_squares(arr, squares):
 #       Returns an array of all such sums
 #       As a note, s[i][0] > s[i][1] > s[i][2]
 #           Order does not matter, so no need to repeat elements
-def split_3(s, squares, min_squares, d):
+def split_3(s, d, squares, min_squares):
     splits = [] #   Stores the ways to split up s
     #bads = 0    #   Keeps track of how many 'continues' occurred
 
@@ -74,7 +74,7 @@ def split_3(s, squares, min_squares, d):
 
 #   Splits a sum, s, into 5 components
 #       In other words, to enough components for a d = 5 array
-def split_5(s, squares, min_squares, d):
+def split_5(s, d, squares, min_squares):
     splits = []
 
     #   The upper bounds for each of these are whack
@@ -118,7 +118,7 @@ def split_5(s, squares, min_squares, d):
 
 
 #   Recursively splits s into d components
-def split_recursive(s, squares, min_squares, d):
+def split_recursive(s, d, squares, min_squares):
     #   Creates an array that will be populated with various ways to split s
     splits = []
 

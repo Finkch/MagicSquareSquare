@@ -124,7 +124,7 @@ def count_root_sums(splits, s, d):
 
 #   This function returns an array where each tuple contains pairs of items
 #   whose root sum is the same.
-def decouple_over_root_sum(splits):
+def decouple_over_root_sum(splits, s):
     out = []    #   The output array
     keys = {}   #   The key is the root sum, the value is the index of that root sum
     index = 0
@@ -141,9 +141,9 @@ def decouple_over_root_sum(splits):
         #   Adds this root sum's tuples to the output array
         out[keys[root_sum]].append(i)
 
-    #   Prefaces each tuple with the root sum and the count of root ums
+    #   Prefaces each tuple with the magic constant, root sum, and the count of root ums
     for i in out:
-        i.insert(0, [i[0][-1][-1], len(i)])
+        i.insert(0, [s, i[0][-1][-1], len(i)])
 
     return out
 
