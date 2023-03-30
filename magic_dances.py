@@ -4,6 +4,24 @@
 import magic_utility as mu
 
 
+#   Processes splits for the boring, regular magic squares
+def magic_dance(s, d, splits, squares, params):
+
+    #   Ensures there's enough possible splits.
+    #   This is mostly a useless check since we expect any reasonable s
+    #   to have a large amount of splits; there are roughly...
+    #       nCr(s, d - 1) / d!
+    #   ...which will be larger than (2 * d + 2) at like s = 10
+    #   for any reasonable d.
+    if len(splits) < d * 2 + 2:
+        return
+
+    #   Appends the sum and count of candidates
+    splits.append([s, len(splits)])
+
+    #   Returns the 'processed' splits
+    return splits
+
 #   Finds magic square squared
 #       That is, magic squares where each item is a distinct integer square
 #       However, in the 3x3 case that is impossible with 9 or 8 distinct items
@@ -25,7 +43,7 @@ def square_magic_dance(s, d, splits, squares, params):
 
 
     #   If this has insufficient number of tuples
-    if len(splits) <= (2 * d + 2):
+    if len(splits) < (2 * d + 2):
         return
 
     #   Prefaces the tuple with the sum and the ways to split that sum

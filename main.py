@@ -91,7 +91,7 @@ def main():
     occurrence_threshold = 1
 
     #   Prints the startup summary
-    print("Checking from ", minimum, " to ", maximum, " for d = ", d, ", requiring at least ", min_squares, " integer square!", sep="")
+    print("Checking from ", minimum, " to ", maximum, " for d = ", d, ", requiring at least ", min_squares, " integer square(s)!", sep="")
 
     #   An array to quickly lookup square roots
     squares = mu.create_squares(maximum)
@@ -101,11 +101,11 @@ def main():
     #magic_fxn = magic_dances.square_magic_dance
 
     #   The way we'll be splitting s into its d components
-    #split_fxn = splitting.split_recursive  #   Faster than split_5!
     #split_fxn = splitting.split_3
-    #split_fxn = splitting.split_5
-    #split_fxn = splitting.split_5_squares   #   Like 1000% faster than split_5
-    split_fxn = splitting.split_recursive_squares   #   About 1/3rd slower than hardcoded split_5_squares
+    #split_fxn = splitting.split_5   #   Slow! ~450.5 s (S E 700-1000)
+    #split_fxn = splitting.split_recursive  #   Faster than split_5!, ~292.1 s (S E 700-1000)
+    #split_fxn = splitting.split_5_squares   #   Like 325% faster than split_5, ~0.9 s (S E 700-1000)
+    split_fxn = splitting.split_recursive_squares   #   About 1/3rd slower than split_5_squares ~1.6 s (S E 700-1000)
 
     #   Starts the timer:
     timer_start = time.time()
@@ -129,7 +129,8 @@ def main():
 
     #   Lists out all candidates
     for i in candidates:
-        print(i)
+        for j in i:
+            print(j)
 
     #   Prints the count of candidates
     print("\nNumber of candidates:", len(candidates), "\nTime elapsed:", round(timer_end - timer_start, 3), " s")
