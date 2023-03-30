@@ -156,12 +156,10 @@ def split_5_squares(s, d, squares, min_squares):
                         continue
 
                     #   Creates the split
-                    split = [sqa[i], sqa[j], sqa[k], sqa[l], m]
+                    split = [sqa[i], sqa[j], sqa[k], sqa[l], m, d]
 
-                    print(split, sum(split))
-
-                    split.append(d)    # Appends the length to this tuple
-                    splits.append(split)    #   Adds the split to the list of good splits
+                    #   Adds the split to the list of good splits
+                    splits.append(split)
 
     #   Returns all valid splits
     return  splits
@@ -220,3 +218,61 @@ def split_recursive_step(s, squares, d, splits, split, i):
 
         #   Recurse downward
         split_recursive_step(s, squares, d - 1, splits, split.copy(), i - 1)
+
+
+def split_recursive_squares(s, d, squares, min_squares):
+    splits = []
+
+    #   Converts the squares dictionary to an array
+    #   This is so we can use indexing rather than keys
+    sqa = [i for i in squares.keys() if i <= s]
+
+    split_recursive_squares_step(s, squares, sqa, d, splits, [])
+
+    return splits
+
+def split_recursive_squares_step(s, squares, sqa, d, splits, split):
+
+    #   Base case
+    if d == 1:
+
+        #   n has no degrees of freedom left
+        n = s - sum(split)
+
+        #   Check if n is a valid split
+        if n >= split[-1] or n not in squares:
+            return
+
+        #   Creates the split
+        split.append(n)
+        split.append(len(split))    #   The count of squares (they're all squares)
+
+        #   Adds the split to the list of good splits
+        splits.append(split)
+
+        return  #   No need to recurse, we've hit the bottom
+
+    #   Appends an empty item to the end of the split so that it
+    #   can be set by the for loop
+    split.append(0)
+
+
+    #   Iterates over all squares at this depth
+    #   Bounds are...
+    #       The lower bound allows lower depths to still have room
+    #       The upper bound goes through all squares up to the square of the depth one step upwards
+    #           The square array is trimmed in the recursion step
+    for i in range(d - 1, len(sqa)):
+
+        #   Sets this item for this depth for the split
+        split[-1] = sqa[i]
+
+        #   If the sum is too large, then all i's greater than this are also bad so just return
+        if sum(split) > s:
+            return
+
+        #   Recurse down a depth
+        #       d is decremented to reflect the step downward in depth.
+        #       The square array (sqa) is trimmed so that the last item is the square
+        #       that this current depth has set in splits.
+        split_recursive_squares_step(s, squares, sqa[:i], d - 1, splits, split.copy())

@@ -16,10 +16,10 @@
 #           At just about each step, there are constraints to trim the search space.
 #           At the beginning, an array is creating to allow quick searches whether an item is a integer square.
 
-import magic_dances
+import magic_dances #   Methods of curating splits for various types of magic squares
 import splitting    #   Methods of splitting s into d components
 import magic_utility as mu  #   Various handy-dandy functions
-import time
+import time #   Used for timing and determining efficiency of functions
 
 
 #   Checks if the candidate is a magic square
@@ -101,10 +101,11 @@ def main():
     #magic_fxn = magic_dances.square_magic_dance
 
     #   The way we'll be splitting s into its d components
-    #split_fxn = splitting.split_recursive
+    #split_fxn = splitting.split_recursive  #   Faster than split_5!
     #split_fxn = splitting.split_3
     #split_fxn = splitting.split_5
-    split_fxn = splitting.split_5_squares   #   Faster than recursion!
+    #split_fxn = splitting.split_5_squares   #   Like 1000% faster than split_5
+    split_fxn = splitting.split_recursive_squares   #   About 1/3rd slower than hardcoded split_5_squares
 
     #   Starts the timer:
     timer_start = time.time()
