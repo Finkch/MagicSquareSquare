@@ -22,13 +22,6 @@ import magic_utility as mu  #   Various handy-dandy functions
 import time #   Used for timing and determining efficiency of functions
 
 
-#   Checks if the candidate is a magic square
-#   TODO: this
-def is_magic_square(s, root_splits, squares):
-
-
-    return
-
 
 #   Checks to see in a magic constant can create a magic square
 #       First creates all ways to split s into d components (following the conditions)
@@ -73,14 +66,14 @@ def main():
     #   d, the number of components s will be split into
     #      Note:    55 is the first d = 5 number with 5 square integers [25, 16, 9, 4, 1]
     #               654 is the first d = 5 with (2 * d + 2) = 12 matching integer root sums
-    d = 5
+    d = 3
 
     #   The minimum number of integer squares required per tuple
-    min_squares = d
+    min_squares = 0
 
     #   The bounds of the search
-    maximum = 655
-    minimum = 654
+    maximum = 16
+    minimum = 15
 
     #   An array of all splits that are potential magic squares
     candidates = []
@@ -97,15 +90,16 @@ def main():
     squares = mu.create_squares(maximum)
 
     #   The type of magic square we're searching for
-    magic_fxn = magic_dances.bi_magic_dance
+    magic_fxn = magic_dances.magic_dance
     #magic_fxn = magic_dances.square_magic_dance
+    #magic_fxn = magic_dances.bi_magic_dance
 
     #   The way we'll be splitting s into its d components
-    #split_fxn = splitting.split_3
+    split_fxn = splitting.split_3
     #split_fxn = splitting.split_5   #   Slow! ~450.5 s (S E 700-1000)
     #split_fxn = splitting.split_recursive  #   Faster than split_5!, ~292.1 s (S E 700-1000)
     #split_fxn = splitting.split_5_squares   #   Like 325% faster than split_5, ~0.9 s (S E 700-1000)
-    split_fxn = splitting.split_recursive_squares   #   About 1/3rd slower than split_5_squares ~1.6 s (S E 700-1000)
+    #split_fxn = splitting.split_recursive_squares   #   About 1/3rd slower than split_5_squares ~1.6 s (S E 700-1000)
 
     #   Starts the timer:
     timer_start = time.time()
@@ -129,8 +123,7 @@ def main():
 
     #   Lists out all candidates
     for i in candidates:
-        for j in i:
-            print(j)
+        print(i)
 
     #   Prints the count of candidates
     print("\nNumber of candidates:", len(candidates), "\nTime elapsed:", round(timer_end - timer_start, 3), " s")

@@ -2,7 +2,7 @@
 #   For example, bi_magic_dance called when searching for a bi-magic square
 
 import magic_utility as mu
-
+import is_magic as im
 
 #   Processes splits for the boring, regular magic squares
 def magic_dance(s, d, splits, squares, params):
@@ -17,10 +17,13 @@ def magic_dance(s, d, splits, squares, params):
         return
 
     #   Appends the sum and count of candidates
-    splits.append([s, len(splits)])
+    splits.insert(0, [s, len(splits)])
+
+    im.is_magic_square(s, d, splits, squares, params)
 
     #   Returns the 'processed' splits
     return splits
+
 
 #   Finds magic square squared
 #       That is, magic squares where each item is a distinct integer square

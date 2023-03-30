@@ -148,4 +148,20 @@ def decouple_over_root_sum(splits, s):
     return out
 
 
+#   Returns a dictionary that maps a number that appears in splits to
+#   all tuples in which that number makes an appearance.
+def create_occurrences_dictionary(splits):
+
+    #   The keys are a set of numbers appearing within the splits
+    #   The values are all tuples in which the key appears
+    occs = {}
+
+    for i in splits[1:]:        #   Ignores the first item (describes the shape of splits)
+        for j in i[:-1]:         #   Ignores the last item (describes the count of squares OR root sum)
+            if j not in occs:   #   If the key does not exist, create an empty tuple
+                occs[j] = []
+            occs[j].append(i)   #   Appends that tuple to the appropriate dictionary entry
+
+    #   Returns the occurrence dictionary
+    return  occs
 
