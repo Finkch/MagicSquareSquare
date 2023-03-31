@@ -19,7 +19,7 @@ def magic_dance(s, d, splits, squares, params):
     #   Appends the sum and count of candidates
     splits.insert(0, [s, len(splits)])
 
-    im.is_magic_square(s, d, splits, squares, params)
+    im.is_magic_square_brute_recurse(s, d, splits, squares, params)
 
     #   Returns the 'processed' splits
     return splits

@@ -165,3 +165,6 @@ def create_occurrences_dictionary(splits):
     #   Returns the occurrence dictionary
     return  occs
 
+def is_unique_tuple(arr1, arr2):
+    seen = set(arr1)
+    return not any(i for i in arr2 if i in seen)
