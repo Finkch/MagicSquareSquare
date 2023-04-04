@@ -18,8 +18,11 @@ def is_magic_square(s, d, splits, squares, params):
 
     candidiates = is_magic_square_set_3(d, splits, occs)
 
-#    for i in candidiates:
-#        print(i)
+
+    for i in candidiates:
+        print(i)
+
+    print(len(candidiates))
 
 
 #   Creates all unique trios of tuples
@@ -51,10 +54,10 @@ def is_magic_square_set_3(d, splits, occs):
     for i in splits:
         is_magic_square_set_setup(d, i, occs, candidates)
 
-    for i in candidates:
-        print(i)
+    #for i in candidates:
+    #    print(i)
 
-    print("Len:", len(candidates))
+    #print("Len:", len(candidates))
 
     return candidates
 
@@ -85,6 +88,11 @@ def is_magic_square_set_step(depth, occs, unique_tuples, unique_set, non_unique_
 
     if depth == 0:
         candidates.append([unique_tuples, non_unique_tuples])
+        #is_magic_square_step_count(3, unique_tuples, non_unique_tuples, candidates)
+        return
+
+    #   Not sure about this
+    if len(unique_set) < depth:
         return
 
     non_unique_tuples.append([])
@@ -106,6 +114,33 @@ def is_magic_square_set_step(depth, occs, unique_tuples, unique_set, non_unique_
                 #   TODO: don't just remove the one i, remove all previous i's
                 is_magic_square_set_step(depth - 1, occs, unique_tuples, set([l for l in unique_set if l != i]), non_unique_tuples.copy(), candidates)
 
+
+def is_magic_square_step_count(d, unique_tuples, non_unique_tuples, candidates):
+    counts = {}
+
+    #   Fills the counts dictionary
+    is_magic_count(unique_tuples, counts)
+    is_magic_count(non_unique_tuples, counts)
+
+    #   For d = 3
+    t = [4, 3, 3, 3, 3, 2, 2, 2, 2]
+
+    check = [i for i in counts.values()]
+    check.sort(reverse=True)
+
+    #print(check)
+    #   Checks if the counts fulfills the conditions
+    if mu.equivalent_tuple(t, check):
+        candidates.append([unique_tuples, non_unique_tuples])
+        #   If so, adds it to the candidates array
+
+
+def is_magic_count(arr, counts):
+    for i in arr:
+        for j in i:
+            if j not in counts.keys():
+                counts[j] = 0
+            counts[j] += 1
 
 
 #   This approach does select all combinations of 8 tuples, but not a good approach

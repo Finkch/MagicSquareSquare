@@ -194,5 +194,7 @@ def is_unique_tuple(arr1, arr2):
 def only_contains_non_unique(base_set, to_check):
     return not any(i for i in to_check if i not in base_set)
 
+def equivalent_tuple(arr1, arr2):
+    return all(arr1[i] == arr2[i] for i in arr1)
 
 
