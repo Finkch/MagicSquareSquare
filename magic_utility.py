@@ -150,7 +150,8 @@ def decouple_over_root_sum(splits, s):
 
 #   Returns a dictionary that maps a number that appears in splits to
 #   all tuples in which that number makes an appearance.
-def create_occurrences_dictionary(splits):
+#   For the case when the first tuple describes the rest's shape.
+def create_occurrences_dictionary_shaped(splits):
 
     #   The keys are a set of numbers appearing within the splits
     #   The values are all tuples in which the key appears
@@ -165,6 +166,33 @@ def create_occurrences_dictionary(splits):
     #   Returns the occurrence dictionary
     return  occs
 
+#   The same as the above, except when the meta-data elements
+#   describing the shape and contents are removed.
+def create_occurrences_dictionary_unshaped(splits):
+
+    #   The keys are a set of numbers appearing within the splits
+    #   The values are all tuples in which the key appears
+    occs = {}
+
+    for i in splits:        #   Ignores the first item (describes the shape of splits)
+        for j in i:         #   Ignores the last item (describes the count of squares OR root sum)
+            if j not in occs:   #   If the key does not exist, create an empty tuple
+                occs[j] = []
+            occs[j].append(i)   #   Appends that tuple to the appropriate dictionary entry
+
+    #   Returns the occurrence dictionary
+    return  occs
+
+#   Checks if two arrays are mutually unique.
+#       In other words, they share no values.
 def is_unique_tuple(arr1, arr2):
     seen = set(arr1)
     return not any(i for i in arr2 if i in seen)
+
+#   Checks whether an array exclusively contains non-unique values.
+#       In other words, it shares all values with the set.
+def only_contains_non_unique(base_set, to_check):
+    return not any(i for i in to_check if i not in base_set)
+
+
+
