@@ -194,7 +194,24 @@ def is_unique_tuple(arr1, arr2):
 def only_contains_non_unique(base_set, to_check):
     return not any(i for i in to_check if i not in base_set)
 
+#   Checks whether the arrays are the same
 def equivalent_tuple(arr1, arr2):
     return all(arr1[i] == arr2[i] for i in arr1)
+
+#   Creates a hash-map of each split
+def create_occurrence_set(splits):
+    occurrences = set()
+
+    #   Converts each split into a string, acting as the key.
+    #   The value is bogus, the hash-map is to use key-lookups to check for existence
+    for i in splits:
+        occurrences.add(str(i))
+
+    return occurrences
+
+#   Checks if a given split is in the hash-map
+#   NOTE: the given split is sorted, such that a match is order independent
+def is_set_tuple(split, occurrence_set):
+    return str(sorted(split, reverse=True)) in occurrence_set
 
 
