@@ -200,18 +200,15 @@ def equivalent_tuple(arr1, arr2):
 
 #   Creates a hash-map of each split
 def create_occurrence_set(splits):
-    occurrences = set()
-
-    #   Converts each split into a string, acting as the key.
-    #   The value is bogus, the hash-map is to use key-lookups to check for existence
-    for i in splits:
-        occurrences.add(str(i))
-
-    return occurrences
+    return set(str(i) for i in splits)
 
 #   Checks if a given split is in the hash-map
 #   NOTE: the given split is sorted, such that a match is order independent
 def is_set_tuple(split, occurrence_set):
     return str(sorted(split, reverse=True)) in occurrence_set
+
+#   Checks if the sum of a given tuple is equal to the magic constant, s
+def is_valid_tuple(s, split):
+    return sum(split) == s
 
 

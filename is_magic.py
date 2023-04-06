@@ -23,3 +23,4 @@ def is_magic_square(s, d, splits, squares, params):
 
     for i in splits:
         print(i)
+
