@@ -91,6 +91,28 @@ def count_occurrences(splits, s, threshold):
     #   Returns
     return t
 
+def count_occurrences_array(s, splits):
+
+    occs = [0] * s
+
+    for i in splits[1:]:
+        for j in i[:-1]:
+            occs[j] += 1
+
+    return occs
+
+def count_occurrences_dict(splits):
+
+    occs = {}
+    print("Ding!", splits)
+
+    for i in splits[1:]:
+        for j in i[:-1]:
+            if j not in occs:
+                occs[j] = 0
+            occs[j] += 1
+
+    return occs
 
 #   Removes items from split which have an insufficient amount of root sums
 #   to form an integer root magic square (thus cannot be bi-magic)

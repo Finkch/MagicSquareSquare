@@ -20,6 +20,7 @@ import magic_dances #   Methods of curating splits for various types of magic sq
 import splitting    #   Methods of splitting s into d components
 import magic_utility as mu  #   Various handy-dandy functions
 import time #   Used for timing and determining efficiency of functions
+import magic_plot as mp
 
 
 
@@ -63,17 +64,20 @@ def magic_dance(s, d, squares, candidates, min_squares, split_fxn, magic_fxn, pa
 #           There, about every other number is candidate
 def main():
 
+    #   Whether a plot should be drawn
+    should_plot = True
+
     #   d, the number of components s will be split into
     #      Note:    55 is the first d = 5 number with 5 square integers [25, 16, 9, 4, 1]
     #               654 is the first d = 5 with (2 * d + 2) = 12 matching integer root sums
-    d = 3
+    d = 5
 
     #   The minimum number of integer squares required per tuple
     min_squares = 0
 
     #   The bounds of the search
-    maximum = 16
-    minimum = 15
+    maximum = 655
+    minimum = 654
 
     #   An array of all splits that are potential magic squares
     candidates = []
@@ -95,11 +99,11 @@ def main():
     #magic_fxn = magic_dances.bi_magic_dance
 
     #   The way we'll be splitting s into its d components
-    split_fxn = splitting.split_3
+    #split_fxn = splitting.split_3
     #split_fxn = splitting.split_5   #   Slow! ~450.5 s (S E 700-1000)
     #split_fxn = splitting.split_recursive  #   Faster than split_5!, ~292.1 s (S E 700-1000)
     #split_fxn = splitting.split_5_squares   #   Like 325% faster than split_5, ~0.9 s (S E 700-1000)
-    #split_fxn = splitting.split_recursive_squares   #   About 1/3rd slower than split_5_squares ~1.6 s (S E 700-1000)
+    split_fxn = splitting.split_recursive_squares   #   About 1/3rd slower than split_5_squares ~1.6 s (S E 700-1000)
 
     #   Starts the timer:
     timer_start = time.time()
@@ -117,6 +121,10 @@ def main():
 
     #   Ends the timer
     timer_end = time.time()
+
+    #   Plots
+    if should_plot:
+        mp.plot_occurrences(candidates[0])
 
     #   Prints out the list of integer squares computed
     print("\nSquares:", squares, "\n")

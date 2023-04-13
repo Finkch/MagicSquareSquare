@@ -15,12 +15,12 @@ def is_magic_square(s, d, splits, squares, params):
 
     t = mu.create_occurrence_set(splits)
 
-    for i in splits:
-        if not mu.is_set_tuple(i, t):
-            print("False!")
+    #for i in splits:
+    #    if not mu.is_set_tuple(i, t):
+    #        print("False!")
 
-    print(t)
+    #print(t)
 
-    for i in splits:
-        print(i)
+    #for i in splits:
+    #    print(i)
 
